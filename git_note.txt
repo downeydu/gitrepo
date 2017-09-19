@@ -11,6 +11,10 @@
 
 $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
+
+$ git config  user.name "BeanDu"
+$ git config  user.email "dbqwerty@163.com"
+
 因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。你也许会担心，如果有人故意冒充别人怎么办？这个不必担心，首先我们相信大家都是善良无知的群众，其次，真的有冒充的也是有办法可查的。
 
 注意git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
@@ -126,6 +130,82 @@ git checkout -- test.txt
 
 
 
+第八章 远程仓库
 
-dd
+完全可以自己搭建一台运行Git的服务器，不过现阶段，为了学Git先搭个服务器绝对是小题大作。好在这个世界上有个叫GitHub的神奇的网站，从名字就可以看出，这个网站就是提供Git仓库托管服务的，所以，只要注册一个GitHub账号，就可以免费获得Git远程仓库。
+由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一点设置：
+
+第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：
+ssh-keygen -t rsa -C "dbqwerty@163.com"
+
+
+
+为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。
+最后友情提示，在GitHub上免费托管的Git仓库，任何人都可以看到喔（但只有你自己才能改）。所以，不要把敏感信息放进去。
+
+
+在GitHub上的这个learngit仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。
+
+本地 关联远程库
+git remote add origin git@github.com:downeydu/gitrepo.git
+远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。
+
+
+把本地库的所有内容推送到远程库上：
+git push -u origin master
+把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。
+
+由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。
+
+将本地库内容推送到远程仓库
+$ git push -u origin master
+The authenticity of host 'github.com (192.30.255.112)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com,192.30.255.112' (RSA) to the list of known hosts.
+Counting objects: 12, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (12/12), 3.58 KiB | 333.00 KiB/s, done.
+Total 12 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), done.
+To github.com:downeydu/gitrepo.git
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+
+推送成功后，可以立刻在GitHub页面中看到远程库的内容已经和本地一模一样
+
+
+
+第九章 从远程库 clone仓库
+
+远程库已经准备好了，下一步是用命令git clone克隆一个本地库：
+
+git clone git@github.com:downeydu/gittest.git
+
+
+clone完毕,当你的本地库与远程库关联后,再从远程库更新代码
+git pull 关联名 分支名                   例如:
+$ git pull remote2 master
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:downeydu/gittest
+ * branch            master     -> FETCH_HEAD
+   6fa5cb4..f130f46  master     -> remote2/master
+Updating 6fa5cb4..f130f46
+Fast-forward
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+ pull后本地的更新会自动提交到本地分支.
+
+
+ 
+
+
+
+
+
 
